@@ -32,6 +32,15 @@ export const barScale = (ar: number) => {
   return +(Math.max(ar / r, r / ar) + 0.01).toFixed(4);
 };
 
+/**
+ * Widest a frame of ratio `ar` may be drawn (CSS px) without enlarging the
+ * 1280×720 poster beyond 1.1×, once the bar-removal scale has cropped it.
+ */
+export const nativeWidth = (ar: number) => {
+  const visible = ar >= 16 / 9 ? 1280 / barScale(ar) : (720 * ar) / barScale(ar);
+  return Math.round(visible * 1.1);
+};
+
 export interface Still {
   slug: string;
   category: 'analogue' | 'digital';

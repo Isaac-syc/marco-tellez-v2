@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FilmFrame from '../../components/FilmFrame.astro';
 import BillingBlock from '../../components/BillingBlock.astro';
-import { site, films } from '../../lib/content';
+import { site, films, nativeWidth } from '../../lib/content';
 
 export function getStaticPaths() {
   return films.map((film, i) => ({
@@ -20,49 +20,57 @@ const pad = (n: number) => String(n).padStart(2, '0');
   current="films"
   ogFilm={film.slug}
 >
-  <main id="main" tabindex="-1">
+  <main id="main" tabindex="-1" class="film-page">
     <div class="wrap film-top">
       <a class="data link-quiet" href="/films/">All films</a>
       <p class="data" aria-label={`Film ${i + 1} of ${films.length}`}>{pad(i + 1)} / {pad(films.length)}</p>
     </div>
 
     <div class="wrap">
-      <div class="film-stage" style={`--ar:${film.aspectRatio}`}>
-        <FilmFrame film={film} variant="player" halo priority vt />
+      <div class="film-stage" style={`--ar:${film.aspectRatio};--native:${nativeWidth(film.aspectRatio)}px`}>
+        <FilmFrame film={film} variant="player" halo priority screen />
       </div>
     </div>
 
-    <div class="wrap film-titlebar">
-      <h1 class="display film-h1">{film.title}</h1>
+    <div class="wrap film-card">
+      <h1 class="title">{film.title}</h1>
       <p class="data film-facts"><span>{film.year}</span> <span>{film.runtime}</span></p>
     </div>
 
     <div class="wrap film-body">
       <p class="lead film-synopsis">{film.synopsis}</p>
-      <div class="film-side">
-        <BillingBlock film={film} />
-        <p class="film-watch">
-          <a class="data link-quiet" href={film.youtubeUrl} target="_blank" rel="noopener">Watch on YouTube ↗</a>
-        </p>
-      </div>
+      <BillingBlock film={film} />
+      <p class="film-watch">
+        <a class="data link-quiet" href={film.youtubeUrl} target="_blank" rel="noopener">Watch on YouTube ↗</a>
+      </p>
     </div>
 
     <nav class="wrap film-pager" aria-label="More films">
       {
         prev ? (
           <a class="pager pager--prev" href={`/films/${prev.slug}/`} rel="prev">
-            <span class="data">Previous</span>
-            <span class="pager__title">{prev.title}</span>
+            <span class="pager__thumb" aria-hidden="true" style={`--ar:${prev.aspectRatio}`}>
+              <FilmFrame film={prev} small />
+            </span>
+            <span class="pager__text">
+              <span class="data">Previous</span>
+              <span class="pager__title">{prev.title}</span>
+            </span>
           </a>
         ) : (
-          <span></span>
+          <span />
         )
       }
       {
         next && (
           <a class="pager pager--next" href={`/films/${next.slug}/`} rel="next">
-            <span class="data">Next</span>
-            <span class="pager__title">{next.title}</span>
+            <span class="pager__text">
+              <span class="data">Next</span>
+              <span class="pager__title">{next.title}</span>
+            </span>
+            <span class="pager__thumb" aria-hidden="true" style={`--ar:${next.aspectRatio}`}>
+              <FilmFrame film={next} small />
+            </span>
           </a>
         )
       }

@@ -21,8 +21,20 @@
   --nav-clear: calc(var(--nav-h) + 1.5rem + 1rem);
   --row-h: clamp(13rem, 26vw, 25rem);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Critically damped spring (damping 1, response 0.38 s) sampled over 420 ms. */
+  --spring: linear(0, 0.0346, 0.1149, 0.2159, 0.3219, 0.4242, 0.5179, 0.6009, 0.6726, 0.7334, 0.7844, 0.8266,
+    0.8612, 0.8893, 0.9121, 0.9304, 0.9451, 0.9568, 0.966, 0.9734, 0.9792, 0.9838, 0.9873, 0.9901, 1);
+  /* Projection screen: one height for every film (masking opens sideways for wider
+     ratios). 620 px keeps every poster at <= 1.1x its usable source width. */
+  --screen-h: min(70vh, calc(100vh - var(--nav-h) - 9rem), 620px);
 
   color-scheme: dark;
+}
+
+@supports (height: 1svh) {
+  :root {
+    --screen-h: min(70svh, calc(100svh - var(--nav-h) - 9rem), 620px);
+  }
 }
 
 @media (max-width: 35rem) {
@@ -41,6 +53,7 @@ html {
   background: var(--screen);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Also keeps the viewport size constant across pages, which view transitions require. */
   scrollbar-gutter: stable;
   scroll-padding-top: var(--nav-clear);
   scrollbar-color: var(--hairline) var(--screen);
@@ -150,11 +163,12 @@ a {
 
 /* ---- Type ---------------------------------------------------------------- */
 
-.display {
-  font-size: clamp(2.75rem, 7.2vw, 6.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.022em;
-  font-weight: 350;
+/* The one heading size. Restrained on purpose: the frame is the large thing. */
+.title {
+  font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-weight: 360;
   text-wrap: balance;
   overflow-wrap: break-word;
 }
@@ -245,7 +259,8 @@ a {
 
 .site-nav {
   position: fixed;
-  inset: 0 0 auto 0;
+  inset: 0 auto auto 0;
+  width: 100%;
   z-index: 40;
 }
 
@@ -323,8 +338,11 @@ a {
     justify-content: center;
     gap: 0;
   }
+  .site-nav__inner > nav,
   .site-nav__list {
     width: 100%;
+  }
+  .site-nav__list {
     justify-content: space-between;
     gap: 0.5rem;
   }
@@ -398,14 +416,6 @@ a {
   padding-bottom: 1.5rem;
 }
 
-.about-h1 {
-  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.015em;
-  font-weight: 380;
-  color: var(--leader);
-}
-
 .page-head .lead {
   margin-top: 1.5rem;
 }
@@ -414,10 +424,15 @@ a {
   margin-top: clamp(3rem, 8vw, 7rem);
 }
 
+/* Right under a page heading the first section needs no extra pause. */
+.page-head + .block {
+  margin-top: clamp(1rem, 3vw, 2rem);
+}
+
 .section-head {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  align-items: baseline;
+  gap: 0.75rem;
   margin-bottom: 1.25rem;
 }
 
@@ -428,16 +443,9 @@ a {
   letter-spacing: -0.005em;
 }
 
-.section-head::after {
-  content: '';
-  order: 1;
-  flex: 1;
-  height: 1px;
-  background: var(--hairline);
-}
-
 .section-head .pill {
-  order: 2;
+  align-self: center;
+  margin-left: auto;
 }
 
 .count {
@@ -497,14 +505,16 @@ a {
   background: var(--screen);
 }
 
+/* The whole frame is the control; its visible sign sits in the lower-left
+   corner, out of the composition (and off the three title-card posters). */
 .ff-play {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center;
+  place-items: end start;
   width: 100%;
   height: 100%;
-  padding: 0;
+  padding: clamp(0.75rem, 2.2%, 1.5rem);
   border: 0;
   background: none;
   color: var(--leader);
@@ -521,15 +531,37 @@ a {
 }
 
 .ff-icon {
-  display: grid;
-  place-items: center;
-  width: 4.5rem;
-  height: 4.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.125rem 0 0.875rem;
   border-radius: 999px;
-  background: rgb(0 0 0 / 0.35);
+  background: rgb(0 0 0 / 0.5);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  transition: transform 100ms ease-out, background-color 100ms ease-out;
+  color: var(--leader);
+  font-family: var(--sans);
+  font-stretch: 82%;
+  font-size: 0.875rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  font-weight: 450;
+  transition: transform 100ms ease-out, background-color 100ms ease-out, opacity 200ms ease-out;
+}
+
+/* While a frame carries over a cut, its control stays out of the picture. */
+[data-vt] .ff-icon {
+  opacity: 0;
+  transition: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ff-icon {
+    background: var(--screen);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 .ff-play--link .ff-icon {
@@ -543,7 +575,7 @@ a {
 
 @media (hover: hover) {
   .ff-play:hover .ff-icon {
-    background: rgb(0 0 0 / 0.55);
+    background: rgb(0 0 0 / 0.75);
   }
 }
 
@@ -575,46 +607,104 @@ a {
   }
 }
 
-/* Frame stage: a frame whose height never exceeds 70svh. */
+/* Frame stage: the projection screen. Constant height on wide viewports
+   (--screen-h), width = height × ratio, never wider than the poster can carry
+   (--native). On phones the width rules and the frame runs edge to edge. */
 .film-stage {
-  width: min(100%, calc(70vh * var(--ar)));
-  width: min(100%, calc(70svh * var(--ar)));
+  width: min(100%, calc(var(--screen-h) * var(--ar)), var(--native, 100%));
   margin-inline: auto;
 }
 
-.hero {
-  padding-top: clamp(1rem, 3vw, 2.5rem);
+@media (max-width: 35rem) {
+  .film-stage {
+    width: calc(100% + 2 * var(--gutter));
+    margin-inline: calc(-1 * var(--gutter));
+    /* edge to edge: the halo may spill up and down, never past the screen sides */
+    overflow-x: clip;
+  }
 }
 
+.hero {
+  padding-top: clamp(0.5rem, 2.5vh, 2rem);
+}
+
+/* Title card under the frame: the work on the left, the billing on the right. */
 .hero-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.25rem 2rem;
   margin-top: 1.25rem;
 }
 
+.hero-work {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.hero-credit {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+}
+
 .hero-title {
-  font-size: clamp(1.6rem, 3.4vw, 3.1rem);
-  line-height: 1.05;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.375rem, 2.3vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
   font-weight: 380;
 }
 
 .hero-title a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+@media (hover: hover) {
+  .hero-title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--silver);
+    text-underline-offset: 0.2em;
+  }
+}
+
+.hero-title a:active {
+  opacity: 0.6;
 }
 
 .hero-meta .data {
   color: var(--silver);
 }
 
-.hero-title + .data {
-  margin-top: 0.25rem;
+/* The director's name is set as a credit, in the billing-block voice. */
+.hero-name {
+  font-family: var(--sans);
+  font-stretch: 62%;
+  font-size: 1.05rem;
+  line-height: 1.25;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
 }
 
-.hero-right {
-  text-align: right;
+@media (max-width: 35rem) {
+  .hero-meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    padding-inline: var(--gutter);
+  }
+  /* The caption belongs to the picture: the work first, then the credit. */
+  .hero-work,
+  .hero-credit {
+    grid-column: 1;
+    text-align: left;
+  }
+  .hero-credit {
+    grid-row: 2;
+  }
 }
 
 .intro-block {
@@ -626,32 +716,24 @@ a {
   margin-top: clamp(3rem, 7vw, 6rem);
 }
 
-/* Home intro: one orchestrated moment, only on a full load of Home. */
-html[data-intro] .hero-frame {
-  animation: intro-frame 700ms var(--ease-out) both;
+/* Home intro: the one orchestrated moment, only on a full load of Home.
+   A fade up from black (no zoom: a projected image does not move), the light
+   spilling into the room a beat later, then the title card. */
+html[data-intro] .hero-frame .ff-box {
+  animation: fade-up 900ms cubic-bezier(0.33, 0, 0.2, 1) 120ms both;
+}
+
+html[data-intro] .hero-frame .ff-halo {
+  animation: fade-up 1400ms ease-out 320ms both;
 }
 
 html[data-intro] .hero-meta {
-  animation: intro-fade 500ms ease-out 200ms both;
+  animation: fade-up 500ms ease-out 650ms both;
 }
 
-@keyframes intro-frame {
+@keyframes fade-up {
   from {
     opacity: 0;
-    transform: scale(1.015);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes intro-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 
@@ -672,6 +754,7 @@ html[data-intro] .hero-meta {
 .fl-row {
   display: grid;
   grid-template-columns: 7.5rem 1.75rem minmax(0, 1fr);
+  --thumb-h: 3.75rem;
   grid-template-areas:
     'thumb num title'
     'thumb .   role'
@@ -688,6 +771,9 @@ html[data-intro] .hero-meta {
 .fl-thumb {
   grid-area: thumb;
   align-self: start;
+  /* constant height: the width tells the ratio */
+  width: calc(var(--thumb-h) * var(--ar));
+  max-width: 100%;
 }
 
 .fl-num {
@@ -697,9 +783,9 @@ html[data-intro] .hero-meta {
 
 .fl-title {
   grid-area: title;
-  font-size: clamp(1.6rem, 3.4vw, 3.1rem);
-  line-height: 1.05;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.375rem, 2.3vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
   font-weight: 380;
   overflow-wrap: break-word;
   min-width: 0;
@@ -749,7 +835,8 @@ html[data-intro] .hero-meta {
 
 @media (max-width: 35rem) {
   .fl-row {
-    grid-template-columns: 5.5rem minmax(0, 1fr);
+    --thumb-h: 3.25rem;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
     grid-template-areas:
       'thumb title'
       'thumb role'
@@ -757,9 +844,6 @@ html[data-intro] .hero-meta {
   }
   .fl-num {
     display: none;
-  }
-  .fl-title {
-    font-size: 1.6rem;
   }
 }
 
@@ -793,10 +877,15 @@ html[data-intro] .hero-meta {
     display: grid;
     position: sticky;
     top: var(--nav-clear);
+    container-type: inline-size;
   }
+  /* Constant height (half the column: a 2:1 frame fills it), centred, so the
+     masking visibly opens and closes as the active film changes ratio. */
   .fl-pframe {
     grid-area: 1 / 1;
     align-self: start;
+    justify-self: center;
+    width: calc(50cqi * var(--ar));
     opacity: 0;
     transition: opacity 100ms linear;
   }
@@ -805,28 +894,29 @@ html[data-intro] .hero-meta {
   }
 }
 
-/* ---- Film page ----------------------------------------------------------- */
+/* ---- Film page ----------------------------------------------------------
+   One central axis, like a screen and its credits: frame, title card,
+   synopsis, billing block. Previous / next carry the frame they cut to. */
 
 .film-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-block: 0.5rem 1rem;
+  padding-block: 0 0.75rem;
   color: var(--silver);
+  font-variant-numeric: tabular-nums;
 }
 
-.film-titlebar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem 2rem;
-  margin-top: 1.75rem;
+.film-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  text-align: center;
 }
 
-.film-h1 {
-  flex: 1 1 18rem;
-  min-width: 0;
+.film-card .title {
+  max-width: 24em;
 }
 
 .film-facts {
@@ -838,16 +928,38 @@ html[data-intro] .hero-meta {
 
 .film-body {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: 2rem clamp(2rem, 6vw, 6rem);
-  margin-top: clamp(2rem, 5vw, 4rem);
-  align-items: start;
+  justify-items: center;
+  margin-top: clamp(2.25rem, 5vw, 3.5rem);
+  text-align: center;
 }
 
-@media (max-width: 50rem) {
-  .film-body {
-    grid-template-columns: minmax(0, 1fr);
-  }
+.film-synopsis {
+  max-width: 32em;
+  font-size: clamp(1.1875rem, 1.55vw, 1.5rem);
+  text-wrap: pretty;
+}
+
+/* Billing block, composed like end credits on a central gutter:
+   the role set flush right before the axis, the name flush left after it. */
+.billing {
+  width: min(100%, 40rem);
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.billing__credit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 1.5rem;
+}
+
+.billing__credit dt {
+  text-align: right;
+  text-wrap: balance;
+}
+
+.billing__credit dd {
+  text-align: left;
 }
 
 .billing__credit dt,
@@ -868,14 +980,14 @@ html[data-intro] .hero-meta {
 
 .billing__credit dd {
   font-size: 1.05rem;
-  margin-top: 0.125rem;
 }
 
 .billing__tech {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.25rem 1.5rem;
-  margin-top: 1.25rem;
+  margin-top: 1rem;
 }
 
 .billing__tech dd {
@@ -883,29 +995,57 @@ html[data-intro] .hero-meta {
   color: var(--silver);
 }
 
+@media (max-width: 35rem) {
+  /* Narrow: the poster billing stacks on the axis. */
+  .billing__credit {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.25rem;
+  }
+  .billing__credit dt,
+  .billing__credit dd {
+    text-align: center;
+  }
+}
+
 .film-watch {
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 .film-pager {
   display: flex;
   justify-content: space-between;
-  gap: 2rem;
-  margin-top: clamp(3rem, 8vw, 6rem);
-  padding-top: 1rem;
+  align-items: flex-end;
+  gap: 1.5rem 2rem;
+  margin-top: clamp(3.5rem, 8vw, 6rem);
+  padding-top: 1.25rem;
   border-top: 1px solid var(--hairline);
 }
 
 .pager {
-  display: grid;
-  gap: 0.125rem;
+  --thumb-h: 3.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   min-height: 2.75rem;
-  padding: 0.5rem 0;
+  padding: 0.25rem 0;
+  min-width: 0;
 }
 
 .pager--next {
-  text-align: right;
   margin-left: auto;
+  text-align: right;
+}
+
+.pager__thumb {
+  flex: none;
+  width: calc(var(--thumb-h) * var(--ar));
+  transition: opacity 100ms ease-out;
+}
+
+.pager__text {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
 }
 
 .pager .data {
@@ -915,6 +1055,7 @@ html[data-intro] .hero-meta {
 .pager__title {
   font-size: 1.25rem;
   line-height: 1.2;
+  overflow-wrap: break-word;
 }
 
 .pager:active {
@@ -927,6 +1068,22 @@ html[data-intro] .hero-meta {
     text-decoration-color: var(--silver);
     text-underline-offset: 0.25em;
     text-decoration-thickness: 1px;
+  }
+}
+
+@media (max-width: 35rem) {
+  .pager {
+    --thumb-h: 2.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .pager--next {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+  .pager__title {
+    font-size: 1.0625rem;
   }
 }
 
@@ -1352,32 +1509,77 @@ html[data-intro] .hero-meta {
   }
 }
 
-/* ---- Page transitions ---------------------------------------------------- */
+/* ---- Page transitions: cuts ----------------------------------------------
+   Grammar (docs/03-v2-cinematic.md §3). Every navigation is a dip to black:
+   the outgoing shot fades out, the incoming one comes up from black once the
+   room is dark. A frame present in both shots does not cut: it carries over as
+   `screen` (named just in time by scripts/transitions.ts), travelling or
+   re-framing its masking with a critically damped spring. The nav never cuts. */
+
+.site-nav {
+  view-transition-name: site-nav;
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  /* The film frame is the shared element between list / hero and film page. */
-  [data-film-frame][data-vt] .ff-box {
-    view-transition-name: var(--vt);
+  [data-vt] > .ff-box {
+    view-transition-name: screen;
   }
 
-  ::view-transition-group(*) {
-    animation-duration: 450ms;
-    animation-timing-function: var(--ease-out);
+  ::view-transition-old(root) {
+    animation: vt-out 160ms cubic-bezier(0.4, 0, 1, 1) both;
   }
 
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-group(root) {
-    animation-duration: 220ms;
-    animation-timing-function: ease-out;
+  ::view-transition-new(root) {
+    animation: vt-in 240ms cubic-bezier(0, 0, 0.2, 1) 160ms both;
+  }
+
+  ::view-transition-group(screen) {
+    animation-duration: 420ms;
+    animation-timing-function: var(--spring);
+  }
+
+  /* Both pictures fill the travelling box and are cropped by it, so a change of
+     ratio reads as the masking moving, never as a stretched image. */
+  ::view-transition-image-pair(screen) {
+    overflow: clip;
+  }
+
+  ::view-transition-old(screen),
+  ::view-transition-new(screen) {
+    height: 100%;
+    object-fit: cover;
+    overflow: clip;
+    animation-timing-function: ease-in-out;
+  }
+
+  /* No counterpart on the other side: it simply leaves / arrives with the dip. */
+  ::view-transition-old(screen):only-child {
+    animation: vt-out 160ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+
+  ::view-transition-new(screen):only-child {
+    animation: vt-in 240ms cubic-bezier(0, 0, 0.2, 1) 160ms both;
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-group(root) {
-    animation-duration: 120ms;
+  /* A short cross-fade, nothing travels. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 150ms;
   }
 
   .ff-box,
@@ -1388,7 +1590,9 @@ html[data-intro] .hero-meta {
     transition-duration: 0.01ms;
   }
 
-  html[data-intro] .hero-frame {
-    animation: intro-fade 150ms linear both;
+  html[data-intro] .hero-frame .ff-box,
+  html[data-intro] .hero-frame .ff-halo,
+  html[data-intro] .hero-meta {
+    animation: none;
   }
 }

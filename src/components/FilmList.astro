@@ -3,6 +3,8 @@
  * Film index. Same component on Home and /films/.
  * Wide + fine pointer: a sticky preview column shows the active film's frame.
  * Touch / narrow: every row carries its own small frame.
+ * Both previews keep a constant height, so each frame's width shows its ratio
+ * (the projection-masking idea of the film pages, in miniature).
  */
 import FilmFrame from './FilmFrame.astro';
 import { films } from '../lib/content';
@@ -14,7 +16,7 @@ import { films } from '../lib/content';
       films.map((f, i) => (
         <li>
           <a class="fl-row" href={`/films/${f.slug}/`} data-slug={f.slug} data-active={i === 0 ? '' : undefined}>
-            <span class="fl-thumb" aria-hidden="true">
+            <span class="fl-thumb" aria-hidden="true" style={`--ar:${f.aspectRatio}`}>
               <FilmFrame film={f} small />
             </span>
             <span class="fl-num">{f.number}</span>
@@ -32,8 +34,8 @@ import { films } from '../lib/content';
   <div class="fl-preview" aria-hidden="true">
     {
       films.map((f, i) => (
-        <div class="fl-pframe" data-slug={f.slug} data-active={i === 0 ? '' : undefined}>
-          <FilmFrame film={f} sizes="(min-width: 90rem) 28rem, 28vw" />
+        <div class="fl-pframe" data-slug={f.slug} data-active={i === 0 ? '' : undefined} style={`--ar:${f.aspectRatio}`}>
+          <FilmFrame film={f} sizes="(min-width: 90rem) 30rem, 28vw" />
         </div>
       ))
     }

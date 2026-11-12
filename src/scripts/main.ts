@@ -24,4 +24,4 @@ initPage();
 document.addEventListener('astro:page-load', initPage);
 
 // The home intro is a one-off: make sure it can never replay on later visits.
-window.setTimeout(() => document.documentElement.removeAttribute('data-intro'), 1500);
+window.setTimeout(() => document.documentElement.removeAttribute('data-intro'), 2000);
