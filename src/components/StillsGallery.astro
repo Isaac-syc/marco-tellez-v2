@@ -1,0 +1,74 @@
+---
+/**
+ * Justified gallery. Rows are computed at build time (lib/rows.ts); each row is
+ * a flex container whose items grow by aspect ratio, so every photo keeps its
+ * own proportion and every row fills the width exactly.
+ */
+import { Picture } from 'astro:assets';
+import { lightboxSources, type Still } from '../lib/content';
+import { partitionRows } from '../lib/rows';
+
+const { items, strip = false } = Astro.props as { items: Still[]; strip?: boolean };
+// The home strip is a single row by definition.
+const rows = strip
+  ? [{ items, sum: items.reduce((a, s) => a + s.ar, 0) }]
+  : partitionRows(items, (s) => s.ar);
+const withSrc = await Promise.all(
+  rows.map(async (r) => ({
+    sum: r.sum,
+    items: await Promise.all(r.items.map(async (s) => ({ s, src: strip ? null : await lightboxSources(s) }))),
+  })),
+);
+---
+
+<div class:list={['sg', { 'sg--strip': strip }]}>
+  {
+    withSrc.map((row) => (
+      <ul class="sg-row">
+        {row.items.map(({ s, src }) => {
+          // Rendered width ≈ share of the row × the content width (max 90rem).
+          const share = (s.ar / row.sum).toFixed(3);
+          const sizes = `(max-width: 35rem) 100vw, calc(min(100vw, 90rem) * ${share})`;
+          const picture = (
+            <Picture
+              src={s.img}
+              alt={s.alt}
+              widths={[480, 800, 1200, 1600]}
+              sizes={sizes}
+              formats={['avif', 'webp']}
+              fallbackFormat="jpg"
+              class="sg-img"
+              loading="lazy"
+              decoding="async"
+            />
+          );
+          return (
+            <li class="sg-item" style={`--ar:${s.ar.toFixed(4)}`}>
+              {src ? (
+                <a
+                  class="sg-link"
+                  href={src.href}
+                  data-lb
+                  data-index={s.n - 1}
+                  data-avif={src.avif}
+                  data-webp={src.webp}
+                  data-w={s.width}
+                  data-h={s.height}
+                  data-title={s.title ?? undefined}
+                  data-category={s.categoryLabel}
+                >
+                  {picture}
+                </a>
+              ) : (
+                <a class="sg-link" href="/stills/">
+                  {picture}
+                </a>
+              )}
+              {!strip && <span class="sg-cap">{s.title}</span>}
+            </li>
+          );
+        })}
+      </ul>
+    ))
+  }
+</div>

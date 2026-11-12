@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../lib/content';
+---
+
+<BaseLayout title={`Page not found — ${site.person.name}`} description={site.about.paragraphs[0]}>
+  <main id="main" tabindex="-1">
+    <div class="wrap page-head">
+      <h1 class="display">Page not found</h1>
+      <p class="lead"><a class="link-quiet" href="/films/">Films</a></p>
+    </div>
+  </main>
+</BaseLayout>

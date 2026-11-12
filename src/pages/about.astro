@@ -1,0 +1,59 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, stillBySlug, personJsonLd } from '../lib/content';
+
+const a = site.about;
+const photo = stillBySlug('days-of-heaven');
+---
+
+<BaseLayout
+  title={`${a.heading} — ${site.person.name}`}
+  description={a.paragraphs[0]}
+  current="about"
+  jsonLd={personJsonLd(Astro.site?.href)}
+>
+  <main id="main" tabindex="-1">
+    <div class="wrap page-head page-head--about">
+      <h1 class="about-h1">{a.heading}</h1>
+    </div>
+
+    <div class="wrap about-grid">
+      <div class="about-text prose">
+        <p class="lead">{a.paragraphs[0]}</p>
+        <p>{a.paragraphs[1]}</p>
+        <p set:html={a.paragraphs[2]} />
+      </div>
+      <figure class="about-photo">
+        <div class="about-photo__img" style={`--ar:${photo.ar.toFixed(4)}`}>
+          <Picture
+            src={photo.img}
+            alt={photo.alt}
+            widths={[480, 800, 1200]}
+            sizes="(min-width: 60rem) 36rem, 100vw"
+            formats={['avif', 'webp']}
+            fallbackFormat="jpg"
+            class="sg-img"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+        <figcaption>{photo.title}</figcaption>
+      </figure>
+    </div>
+
+    <div class="wrap">
+      <dl class="cv">
+        <div class="cv__row">
+          <dt>{a.experience.heading}</dt>
+          <dd>{a.experience.lines.map((l) => <span>{l}</span>)}</dd>
+        </div>
+        <div class="cv__row">
+          <dt>{a.education.heading}</dt>
+          <dd>{a.education.lines.map((l) => <span>{l}</span>)}</dd>
+        </div>
+      </dl>
+    </div>
+  </main>
+</BaseLayout>

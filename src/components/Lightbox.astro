@@ -1,0 +1,30 @@
+---
+/** Native <dialog> shell; behaviour lives in src/lib/lightbox.ts. */
+---
+
+<dialog class="lb" data-lightbox aria-label="Stills viewer">
+  <div class="lb-bg" data-lb-bg></div>
+  <div class="lb-top lb-chrome" data-lb-chrome>
+    <button class="lb-btn" type="button" data-lb-close aria-label="Close">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </button>
+  </div>
+  <div class="lb-stage" data-lb-stage>
+    <div class="lb-track" data-lb-track></div>
+  </div>
+  <div class="lb-foot lb-chrome" data-lb-chrome>
+    <p class="lb-cap">
+      <span class="lb-title" data-lb-title></span>
+      <span class="lb-cat" data-lb-cat></span>
+    </p>
+    <p class="lb-count" data-lb-count aria-live="polite"></p>
+    <div class="lb-nav">
+      <button class="lb-btn" type="button" data-lb-prev aria-label="Previous">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"></path></svg>
+      </button>
+      <button class="lb-btn" type="button" data-lb-next aria-label="Next">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
+  </div>
+</dialog>

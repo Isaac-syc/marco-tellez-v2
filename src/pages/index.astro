@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FilmFrame from '../components/FilmFrame.astro';
+import FilmList from '../components/FilmList.astro';
+import StillsGallery from '../components/StillsGallery.astro';
+import { site, filmBySlug, stillBySlug, personJsonLd } from '../lib/content';
+
+const film = filmBySlug(site.home.featuredFilmSlug);
+const [featuredPrefix] = site.home.featuredLabel.split(' / '); // "Featured work"
+const strip = ['days-of-heaven', 'untitled-03', 'plein-soleil'].map(stillBySlug);
+const intro = site.about.paragraphs[0];
+---
+
+<BaseLayout
+  title={`${site.person.name} — ${site.person.role}`}
+  description={intro}
+  jsonLd={personJsonLd(Astro.site?.href)}
+  intro
+>
+  <main id="main" tabindex="-1">
+    <h1 class="sr-only">{site.person.name}</h1>
+
+    <section class="wrap hero" aria-label={featuredPrefix}>
+      <div class="film-stage" style={`--ar:${film.aspectRatio}`}>
+        <FilmFrame film={film} variant="player" halo priority class="hero-frame" />
+        <div class="hero-meta">
+          <div>
+            <h2 class="hero-title"><a href={`/films/${film.slug}/`}>{film.title}</a></h2>
+            <p class="data">{featuredPrefix}</p>
+          </div>
+          <div class="hero-right data">
+            <p>{site.person.role}</p>
+            <p>{site.person.homeKickerRight}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap intro-block">
+      <p class="lead">{intro}</p>
+      <a class="pill" href="/about/">{site.about.heading}</a>
+    </section>
+
+    <section class="wrap block">
+      <div class="section-head"><h2>Films</h2></div>
+      <FilmList />
+    </section>
+
+    <section class="wrap block">
+      <div class="section-head">
+        <h2>Stills</h2>
+        <a class="pill" href="/stills/">All stills</a>
+      </div>
+      <StillsGallery items={strip} strip />
+    </section>
+  </main>
+</BaseLayout>

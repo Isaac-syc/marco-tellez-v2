@@ -1,0 +1,18 @@
+---
+import { site, mailHref } from '../lib/content';
+const c = site.contact;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <a class="site-footer__talk" href="/contact/">{c.heading}</a>
+    <ul class="site-footer__links">
+      <li><a href={mailHref}>{c.email}</a></li>
+      <li><a href={c.instagram.url} rel="noopener" target="_blank">{c.instagram.label}</a></li>
+      <li><a href={c.linkedin.url} rel="noopener" target="_blank">{c.linkedin.label}</a></li>
+    </ul>
+    <p class="site-footer__where">
+      {c.locationLines.map((l) => <span>{l}</span>)}
+    </p>
+  </div>
+</footer>

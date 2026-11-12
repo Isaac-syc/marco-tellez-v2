@@ -1,0 +1,41 @@
+---
+/**
+ * Film index. Same component on Home and /films/.
+ * Wide + fine pointer: a sticky preview column shows the active film's frame.
+ * Touch / narrow: every row carries its own small frame.
+ */
+import FilmFrame from './FilmFrame.astro';
+import { films } from '../lib/content';
+---
+
+<div class="film-list" data-film-list>
+  <ol class="fl-rows">
+    {
+      films.map((f, i) => (
+        <li>
+          <a class="fl-row" href={`/films/${f.slug}/`} data-slug={f.slug} data-active={i === 0 ? '' : undefined}>
+            <span class="fl-thumb" aria-hidden="true">
+              <FilmFrame film={f} small />
+            </span>
+            <span class="fl-num">{f.number}</span>
+            <span class="fl-title">{f.title}</span>
+            <span class="fl-role">{f.listRole}</span>
+            <span class="fl-meta">
+              <span>{f.year}</span>
+              <span>{f.runtime}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="fl-preview" aria-hidden="true">
+    {
+      films.map((f, i) => (
+        <div class="fl-pframe" data-slug={f.slug} data-active={i === 0 ? '' : undefined}>
+          <FilmFrame film={f} sizes="(min-width: 90rem) 28rem, 28vw" />
+        </div>
+      ))
+    }
+  </div>
+</div>

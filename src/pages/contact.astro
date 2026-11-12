@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, mailHref, telHref } from '../lib/content';
+
+const c = site.contact;
+// Display form of a URL: host + path, no protocol.
+const shown = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+---
+
+<BaseLayout
+  title={`${c.heading} — ${site.person.name}`}
+  description={site.about.paragraphs[0]}
+  current="contact"
+  footer={false}
+>
+  <main id="main" tabindex="-1">
+    <div class="wrap page-head">
+      <h1 class="display"><a class="display-link" href={mailHref}>{c.heading}</a></h1>
+    </div>
+    <div class="wrap">
+      <dl class="rows">
+        <div class="rows__row">
+          <dt>Email</dt>
+          <dd class="rows__email">
+            <a href={mailHref}>{c.email}</a>
+            <span class="copy" data-copy={c.email} aria-live="polite">
+              <button class="pill" type="button" data-copy-btn>Copy email</button>
+            </span>
+          </dd>
+        </div>
+        <div class="rows__row">
+          <dt>{c.instagram.label}</dt>
+          <dd><a href={c.instagram.url} target="_blank" rel="noopener">{shown(c.instagram.url)}</a></dd>
+        </div>
+        <div class="rows__row">
+          <dt>{c.linkedin.label}</dt>
+          <dd><a href={c.linkedin.url} target="_blank" rel="noopener">{shown(c.linkedin.url)}</a></dd>
+        </div>
+        <div class="rows__row">
+          <dt>Mobile</dt>
+          <dd><a href={telHref}>{c.mobile.label}</a></dd>
+        </div>
+        <div class="rows__row">
+          <dt class="sr-only">Location</dt>
+          <dd class="rows__where">{c.locationLines.map((l) => <span>{l}</span>)}</dd>
+        </div>
+      </dl>
+    </div>
+  </main>
+</BaseLayout>

@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StillsGallery from '../components/StillsGallery.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { site, stillsOf } from '../lib/content';
+
+const sections = site.stills.sections.map((s) => ({
+  ...s,
+  items: stillsOf(s.key as 'analogue' | 'digital'),
+}));
+---
+
+<BaseLayout
+  title={`Stills — ${site.person.name}`}
+  description={site.about.paragraphs[0]}
+  current="stills"
+>
+  <main id="main" tabindex="-1" data-gallery>
+    <div class="wrap page-head">
+      <h1 class="display">Stills</h1>
+      <p class="data jump">
+        {sections.map((s) => <a class="link-quiet" href={`#${s.key}`}>{s.label}</a>)}
+      </p>
+    </div>
+    {
+      sections.map((s) => (
+        <section class="wrap block" aria-labelledby={`h-${s.key}`}>
+          <div class="section-head" id={s.key}>
+            <h2 id={`h-${s.key}`}>{s.label}</h2>
+            <span class="data count">{s.items.length}</span>
+          </div>
+          <StillsGallery items={s.items} />
+        </section>
+      ))
+    }
+    <Lightbox />
+  </main>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+import { nav, site } from '../lib/content';
+const { current } = Astro.props as { current?: string };
+---
+
+<header class="site-nav" transition:persist="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__name" href="/" data-nav-home>{site.person.name}</a>
+    <nav aria-label="Main">
+      <ul class="site-nav__list">
+        {
+          nav.map((n) => (
+            <li>
+              <a href={n.href} data-nav={n.key} aria-current={current === n.key ? 'page' : undefined}>
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

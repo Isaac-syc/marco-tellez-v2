@@ -1,0 +1,28 @@
+---
+import type { Film } from '../lib/content';
+import { site } from '../lib/content';
+const { film } = Astro.props as { film: Film };
+const data = [
+  ['Format', film.format],
+  ['Aspect ratio', film.aspectRatioLabel],
+  ['Color', film.color],
+  ['Language', film.language],
+];
+---
+
+<dl class="billing">
+  <div class="billing__credit">
+    <dt>{film.credit}</dt>
+    <dd>{site.person.name}</dd>
+  </div>
+  <div class="billing__tech">
+    {
+      data.map(([k, v]) => (
+        <div>
+          <dt class="sr-only">{k}</dt>
+          <dd>{v}</dd>
+        </div>
+      ))
+    }
+  </div>
+</dl>

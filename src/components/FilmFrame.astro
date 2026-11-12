@@ -1,0 +1,119 @@
+---
+/**
+ * A film frame: always drawn in the film's own aspect ratio on black.
+ *  - variant "player": poster + play button (iframe injected on click by
+ *    scripts/film-frame.ts); films with embeddable:false render a link instead
+ *    and no iframe code path is ever reachable for them.
+ *  - variant "plain":  poster only (list previews and row thumbnails).
+ * The YouTube poster has black bars baked in; `--bar` scales it so only the real
+ * frame shows inside the box.
+ */
+import type { Film } from '../lib/content';
+import { posterUrl, posterSmallUrl, embedUrl, barScale } from '../lib/content';
+
+export interface Props {
+  film: Film;
+  variant?: 'player' | 'plain';
+  halo?: boolean;
+  /** Main image of the page: eager + high priority. */
+  priority?: boolean;
+  /** Small row thumbnail: picks the 320 px poster. */
+  small?: boolean;
+  sizes?: string;
+  /** Static view-transition name (film page). */
+  vt?: boolean;
+  class?: string;
+}
+const { film, variant = 'plain', halo = false, priority = false, small = false, sizes, vt = false } = Astro.props;
+const bar = barScale(film.aspectRatio);
+const poster = posterUrl(film);
+const style = `--ar:${film.aspectRatio};--bar:${bar}${vt ? `;--vt:film-${film.slug}` : ''}`;
+const loading = priority ? 'eager' : 'lazy';
+const cls = ['film-frame', `film-frame--${variant}`, Astro.props.class].filter(Boolean).join(' ');
+---
+
+<div class={cls} style={style} data-film-frame={film.slug} data-vt={vt ? '' : undefined}>
+  {
+    halo && (
+      <div class="ff-halo" aria-hidden="true">
+        <img src={poster} alt="" width="1280" height="720" loading={loading} decoding="async" />
+      </div>
+    )
+  }
+  {
+    variant === 'player' && film.embeddable && (
+      <div class="ff-box" data-player data-embed={embedUrl(film)} data-title={film.title}>
+        <img
+          class="ff-poster"
+          src={poster}
+          alt=""
+          width="1280"
+          height="720"
+          loading={loading}
+          fetchpriority={priority ? 'high' : undefined}
+          decoding="async"
+        />
+        <button class="ff-play" type="button" aria-label={`Play ${film.title}`}>
+          <span class="ff-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28">
+              <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
+            </svg>
+          </span>
+        </button>
+      </div>
+    )
+  }
+  {
+    variant === 'player' && !film.embeddable && (
+      <a
+        class="ff-box ff-play ff-play--link"
+        href={film.youtubeUrl}
+        target="_blank"
+        rel="noopener"
+        aria-label={`Watch ${film.title} on YouTube`}
+      >
+        <img
+          class="ff-poster"
+          src={poster}
+          alt=""
+          width="1280"
+          height="720"
+          loading={loading}
+          fetchpriority={priority ? 'high' : undefined}
+          decoding="async"
+        />
+        <span class="ff-icon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            width="26"
+            height="26"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+          </svg>
+        </span>
+      </a>
+    )
+  }
+  {
+    variant === 'plain' && (
+      <div class="ff-box">
+        <img
+          class="ff-poster"
+          src={small ? posterSmallUrl(film) : poster}
+          srcset={small ? `${posterSmallUrl(film)} 320w, ${poster} 1280w` : undefined}
+          sizes={small ? '(min-width: 35rem) 11rem, 30vw' : sizes}
+          alt=""
+          width="1280"
+          height="720"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )
+  }
+</div>
