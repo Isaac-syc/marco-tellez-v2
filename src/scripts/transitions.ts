@@ -18,7 +18,7 @@
  */
 import { activateFilm } from './film-list';
 
-const FILM_PATH = /^\/films\/([^/]+)\/?$/;
+const FILM_PATH = /^(?:\/(?:es|cs))?\/films\/([^/]+)\/?$/;
 const slugOf = (path: string): string | null => FILM_PATH.exec(path)?.[1] ?? null;
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -59,7 +59,9 @@ function screen(): HTMLElement | null {
 
 /** Reflects the current location in the persisted nav (aria-current). */
 export function syncNav(path: string): void {
-  const section = path.split('/')[1] ?? '';
+  // The first segment is the locale on /es/… and /cs/…; English has none.
+  const parts = path.split('/');
+  const section = (parts[1] === 'es' || parts[1] === 'cs' ? parts[2] : parts[1]) ?? '';
   document.querySelectorAll<HTMLAnchorElement>('.site-nav [data-nav]').forEach((a) => {
     if (a.dataset.nav === section) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');

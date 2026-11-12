@@ -7,7 +7,10 @@
  * (the projection-masking idea of the film pages, in miniature).
  */
 import FilmFrame from './FilmFrame.astro';
-import { films } from '../lib/content';
+import { filmsOf } from '../lib/content';
+import { href, localeOf } from '../i18n';
+const locale = localeOf(Astro.currentLocale);
+const films = filmsOf(locale);
 ---
 
 <div class="film-list" data-film-list>
@@ -15,7 +18,7 @@ import { films } from '../lib/content';
     {
       films.map((f, i) => (
         <li>
-          <a class="fl-row" href={`/films/${f.slug}/`} data-slug={f.slug} data-active={i === 0 ? '' : undefined}>
+          <a class="fl-row" href={href(locale, `/films/${f.slug}/`)} data-slug={f.slug} data-active={i === 0 ? '' : undefined}>
             <span class="fl-thumb" aria-hidden="true" style={`--ar:${f.aspectRatio}`}>
               <FilmFrame film={f} small />
             </span>

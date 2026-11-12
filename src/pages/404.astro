@@ -3,7 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../lib/content';
 ---
 
-<BaseLayout title={`Page not found — ${site.person.name}`} description={site.about.paragraphs[0]}>
+<!-- One 404 serves every URL (and Vercel serves it for /es/… and /cs/… too): English, no redirect. -->
+<BaseLayout title={`Page not found — ${site.person.name}`} description={site.about.paragraphs[0]} notFound>
   <main id="main" tabindex="-1">
     <div class="wrap page-head">
       <h1 class="title">Page not found</h1>

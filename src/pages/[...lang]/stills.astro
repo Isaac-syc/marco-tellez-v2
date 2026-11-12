@@ -1,23 +1,29 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import StillsGallery from '../components/StillsGallery.astro';
-import Lightbox from '../components/Lightbox.astro';
-import { site, stillsOf } from '../lib/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StillsGallery from '../../components/StillsGallery.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { stillsOf } from '../../lib/content';
+import { content, langPaths, localeOf, t } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const locale = localeOf(Astro.currentLocale);
+const site = content(locale);
+const ui = t(locale);
 
 const sections = site.stills.sections.map((s) => ({
   ...s,
-  items: stillsOf(s.key as 'analogue' | 'digital'),
+  items: stillsOf(s.key as 'analogue' | 'digital', locale),
 }));
 ---
 
 <BaseLayout
-  title={`Stills — ${site.person.name}`}
+  title={`${ui.stills} — ${site.person.name}`}
   description={site.about.paragraphs[0]}
   current="stills"
 >
   <main id="main" tabindex="-1" data-gallery>
     <div class="wrap page-head">
-      <h1 class="title">Stills</h1>
+      <h1 class="title">{ui.stills}</h1>
       <p class="data jump">
         {sections.map((s) => <a class="link-quiet" href={`#${s.key}`}>{s.label}</a>)}
       </p>

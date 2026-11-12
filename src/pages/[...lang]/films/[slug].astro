@@ -1,16 +1,23 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import FilmFrame from '../../components/FilmFrame.astro';
-import BillingBlock from '../../components/BillingBlock.astro';
-import { site, films, nativeWidth } from '../../lib/content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import FilmFrame from '../../../components/FilmFrame.astro';
+import BillingBlock from '../../../components/BillingBlock.astro';
+import { nativeWidth } from '../../../lib/content';
+import { content, href, langPaths, localeOf, t } from '../../../i18n';
 
 export function getStaticPaths() {
-  return films.map((film, i) => ({
-    params: { slug: film.slug },
-    props: { film, i, prev: films[i - 1] ?? null, next: films[i + 1] ?? null },
-  }));
+  return langPaths().flatMap(({ params: { lang } }) => {
+    const films = content(localeOf(lang)).films;
+    return films.map((film, i) => ({
+      params: { lang, slug: film.slug },
+      props: { film, i, total: films.length, prev: films[i - 1] ?? null, next: films[i + 1] ?? null },
+    }));
+  });
 }
-const { film, i, prev, next } = Astro.props;
+const locale = localeOf(Astro.currentLocale);
+const site = content(locale);
+const ui = t(locale);
+const { film, i, total, prev, next } = Astro.props;
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -22,8 +29,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 >
   <main id="main" tabindex="-1" class="film-page">
     <div class="wrap film-top">
-      <a class="data link-quiet" href="/films/">All films</a>
-      <p class="data" aria-label={`Film ${i + 1} of ${films.length}`}>{pad(i + 1)} / {pad(films.length)}</p>
+      <a class="data link-quiet" href={href(locale, '/films/')}>{ui.allFilms}</a>
+      <p class="data" aria-label={ui.filmOf(i + 1, total)}>{pad(i + 1)} / {pad(total)}</p>
     </div>
 
     <div class="wrap">
@@ -41,19 +48,19 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <p class="lead film-synopsis">{film.synopsis}</p>
       <BillingBlock film={film} />
       <p class="film-watch">
-        <a class="data link-quiet" href={film.youtubeUrl} target="_blank" rel="noopener">Watch on YouTube ↗</a>
+        <a class="data link-quiet" href={film.youtubeUrl} target="_blank" rel="noopener">{ui.watchOnYoutube} ↗</a>
       </p>
     </div>
 
-    <nav class="wrap film-pager" aria-label="More films">
+    <nav class="wrap film-pager" aria-label={ui.moreFilms}>
       {
         prev ? (
-          <a class="pager pager--prev" href={`/films/${prev.slug}/`} rel="prev">
+          <a class="pager pager--prev" href={href(locale, `/films/${prev.slug}/`)} rel="prev">
             <span class="pager__thumb" aria-hidden="true" style={`--ar:${prev.aspectRatio}`}>
               <FilmFrame film={prev} small />
             </span>
             <span class="pager__text">
-              <span class="data">Previous</span>
+              <span class="data">{ui.prev}</span>
               <span class="pager__title">{prev.title}</span>
             </span>
           </a>
@@ -63,9 +70,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
       }
       {
         next && (
-          <a class="pager pager--next" href={`/films/${next.slug}/`} rel="next">
+          <a class="pager pager--next" href={href(locale, `/films/${next.slug}/`)} rel="next">
             <span class="pager__text">
-              <span class="data">Next</span>
+              <span class="data">{ui.next}</span>
               <span class="pager__title">{next.title}</span>
             </span>
             <span class="pager__thumb" aria-hidden="true" style={`--ar:${next.aspectRatio}`}>

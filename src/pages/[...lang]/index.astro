@@ -1,20 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import FilmFrame from '../components/FilmFrame.astro';
-import FilmList from '../components/FilmList.astro';
-import StillsGallery from '../components/StillsGallery.astro';
-import { site, filmBySlug, stillBySlug, personJsonLd, nativeWidth } from '../lib/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FilmFrame from '../../components/FilmFrame.astro';
+import FilmList from '../../components/FilmList.astro';
+import StillsGallery from '../../components/StillsGallery.astro';
+import { filmBySlug, stillBySlug, personJsonLd, nativeWidth } from '../../lib/content';
+import { content, href, langPaths, localeOf, t } from '../../i18n';
 
-const film = filmBySlug(site.home.featuredFilmSlug);
+export const getStaticPaths = langPaths;
+const locale = localeOf(Astro.currentLocale);
+const site = content(locale);
+const ui = t(locale);
+
+const film = filmBySlug(site.home.featuredFilmSlug, locale);
 const [featuredPrefix] = site.home.featuredLabel.split(' / '); // "Featured work"
-const strip = ['days-of-heaven', 'untitled-03', 'plein-soleil'].map(stillBySlug);
+const strip = ['days-of-heaven', 'untitled-03', 'plein-soleil'].map((s) => stillBySlug(s, locale));
 const intro = site.about.paragraphs[0];
 ---
 
 <BaseLayout
   title={`${site.person.name} — ${site.person.role}`}
   description={intro}
-  jsonLd={personJsonLd(Astro.site?.href)}
+  jsonLd={personJsonLd(locale, Astro.site?.href)}
   intro
 >
   <main id="main" tabindex="-1">
@@ -28,7 +34,7 @@ const intro = site.about.paragraphs[0];
             <p class="data">{site.person.homeKickerRight}</p>
           </div>
           <div class="hero-work">
-            <h2 class="hero-title"><a href={`/films/${film.slug}/`}>{film.title}</a></h2>
+            <h2 class="hero-title"><a href={href(locale, `/films/${film.slug}/`)}>{film.title}</a></h2>
             <p class="data">{featuredPrefix}</p>
           </div>
         </div>
@@ -37,18 +43,18 @@ const intro = site.about.paragraphs[0];
 
     <section class="wrap intro-block">
       <p class="lead">{intro}</p>
-      <a class="pill" href="/about/">{site.about.heading}</a>
+      <a class="pill" href={href(locale, '/about/')}>{site.about.heading}</a>
     </section>
 
     <section class="wrap block">
-      <div class="section-head"><h2>Films</h2></div>
+      <div class="section-head"><h2>{ui.films}</h2></div>
       <FilmList />
     </section>
 
     <section class="wrap block">
       <div class="section-head">
-        <h2>Stills</h2>
-        <a class="pill" href="/stills/">All stills</a>
+        <h2>{ui.stills}</h2>
+        <a class="pill" href={href(locale, '/stills/')}>{ui.allStills}</a>
       </div>
       <StillsGallery items={strip} strip />
     </section>

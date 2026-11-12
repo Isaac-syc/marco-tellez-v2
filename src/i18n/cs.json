@@ -1,0 +1,67 @@
+{
+  "person": { "role": "Filmař / Režisér", "location": "Praha", "homeKickerRight": "Praha — 2026" },
+  "home": { "featuredLabel": "Vybrané dílo / Saccharine" },
+  "filmWords": {
+    "type": { "Fiction Short": "Hraný krátký film", "Documentary Short": "Dokumentární krátký film" },
+    "language": { "Czech": "Čeština", "English": "Angličtina", "Spanish": "Španělština" },
+    "format": { "16 mm": "16 mm", "Digital": "Digitální" },
+    "color": { "Color": "Barevný", "Color / B&W": "Barevný / Černobílý", "B&W": "Černobílý" },
+    "credit": {
+      "Director & Writer": "Režie a scénář",
+      "Director, Writer, Cinematographer, Sound Designer & Editor": "Režie, scénář, kamera, zvuk a střih"
+    }
+  },
+  "synopsis": {
+    "saccharine": "Monika, Ludmilla a Honza věří, že je hudba udrží pohromadě, a projdou si poslední zkoušku před dalším koncertem. Rozpory o řemeslo a showbyznys však odhalí trhliny ve vztazích mezi sourozenci.",
+    "kate-and-sam": "Co začne jako piknik u Vltavy, skončí pod mostem, kde Sam dostane přesně to, kvůli čemu přišel. Kate zůstane jen ticho, které následuje.",
+    "el-testamento-belmonte": "V posledních dnech občanské války čeká Liborio, že se svět bude chovat tak, jako se chová v knihách, které čte. Nechová. Jen býk – jediná věc v jeho životě, která má váhu příběhu – mu zdánlivě slibuje konec.",
+    "bi-presence": "Han se ve snech opakovaně vrací jeden zážitek. Když sleduje jeho filmovou rekonstrukci, zjišťuje, že obraz lze zapomenout, ale nelze ho ztratit.",
+    "nocturno-de-chopin": "Inspirována básní Alejandry Pizarnik bloudí Shirley tangovým barem a hledá milence, který ji podvedl. Hudba hraje dál a noc ji nepouští.",
+    "a-skull-for-kira": "Aby zapůsobil na fenku Kiru, rozhodne se pug Max darovat jí lebku mrtvého zvířete. Lebka se ale vytrácí, a jak se den chýlí ke konci, Max zjišťuje, že hledá něco, co čas nemůže odnést."
+  },
+  "stills": {
+    "sections": { "analogue": "Analogové", "digital": "Digitální" },
+    "alt": {
+      "days-of-heaven": "Zlaté pole posetí balíky sena, viděné přes čelní sklo auta; ve zpětném zrcátku se odráží dům.",
+      "scarecrow": "Černobílá silueta strašáka s rozpaženýma rukama na pozadí zataženého nebe.",
+      "bicis": "Dvě kola opřená o borovici na břehu tyrkysového jezera, v pozadí koupající se lidé.",
+      "ilford": "Černobílý pohled vzhůru do větví a koruny velkého stromu.",
+      "wave-2": "Černobílá abstrakce: jasný svislý pruh světla mezi tmavými, strukturovanými plochami.",
+      "avant-garde": "Černobílý pohled do úzké uličky vzhůru: železný balkon na omítnuté fasádě, dráty a pouliční lampa nad hlavou.",
+      "bici": "Černobílý záběr zespodu na bronzovou sochu cyklisty nakloněného nad řídítky.",
+      "gato": "Černobílá fotografie kočky sedící uprostřed úzké kamenné uličky.",
+      "a-glass": "Silueta remorkéru na klidné hladině při západu slunce, v pozadí kopce a zářící mraky.",
+      "venus": "Černobílá socha nahé ženské postavy na podstavci před cihlovou budovou se štítem.",
+      "antilope-01": "Pohled z nitra kaňonu z červeného pískovce na oblohu a mraky.",
+      "happy-together": "Červenobílý maják na skalnatém ostrůvku, za vodou zasněžené hory.",
+      "plein-soleil": "Malá osamělá loď na otevřené vodě, viděná shora skrz divoké trávy.",
+      "building": "Černobílý pohled zespodu na pouliční lampu a skleněnou věž, na jejímž vrcholu se třpytí slunce.",
+      "niente-qua": "Černobílá scéna z parku se stromy v popředí a lešenářskou věží v dálce.",
+      "olimpico": "Černobílá bronzová socha diskaře před cihlovou budovou.",
+      "untitled-03": "Žena sedící mezi lavicemi baziliky zalité oranžovým světlem vitráží.",
+      "simonetta": "Kamenná socha ženy s věncem, porostlá mechem, za ní tmavé listí.",
+      "moto": "Dva lidé na skútru zahlédnutí mezi tmavými kmeny stromů, za nimi tyrkysová voda.",
+      "pachinko-ist-tot": "Jediný kulatý balík sena na zelené louce, v pozadí zalesněné kopce.",
+      "untitled-02": "Dva lidé v zimních kabátech na palubě bílé lodi, viděni zespodu na pozadí modré oblohy.",
+      "untitled-01": "Palubní deska a volant starého automobilu, viděné bočním okénkem.",
+      "rash": "Černobílý detail štítků z trhu s kořením s nápisy Ras el Hanout a Za’atar.",
+      "untitled-04": "Černobílý pohled na hausbót zakotvený v kanálu lemovaném vysokými úzkými domy.",
+      "in-two-seconds": "Pára se vznáší nad zrcadlově hladkým termálním jezírkem, v němž se odráží zalesněný kopec.",
+      "neroli-portofino": "Okrové zdi a schodiště rámují oblouk, jímž je vidět kotvící lodě v přístavu."
+    }
+  },
+  "about": {
+    "heading": "O Marcovi",
+    "paragraphs": [
+      "Marco Tellez-Alcocer je mexický filmový režisér a střihač žijící v Praze. Věnuje se hranému i dokumentárnímu filmu a jeho filmy sledují, jak lidé nesou své vzpomínky a hledají smysl.",
+      "Impulzem každého z jeho filmů je obraz, jediný okamžik, který přichází dlouho předtím, než vznikne příběh. Odtud se jeho filmy skládají jako souhrn obrazů, v nichž se protínají minulost, paměť a hledání smyslu.",
+      "Dokončuje magisterské studium režie na Filmové a televizní fakultě Akademie múzických umění v Praze (FAMU), kde pracuje na krátkém dokumentu z rodinných archivních záběrů a na hraném krátkém filmu <em>Friedmann Creek</em> o doppelgängerech a o tom, jak ostatní vnímají přítomnost člověka."
+    ],
+    "experience": { "heading": "Vybrané zkušenosti", "lines": ["Nezávislý filmař", "Hraná a komerční tvorba"] },
+    "education": {
+      "heading": "Vzdělání",
+      "lines": ["BFA Filmová a audiovizuální tvorba – Universidad Popular Autónoma del Estado de Puebla (UPAEP)"]
+    }
+  },
+  "contact": { "heading": "Pojďme si promluvit!", "locationLines": ["Praha, Česká republika", "K dispozici mezinárodně"] }
+}

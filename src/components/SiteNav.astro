@@ -1,15 +1,17 @@
 ---
-import { nav, site } from '../lib/content';
+import { nav } from '../lib/content';
+import { content, href, localeOf, t } from '../i18n';
 const { current } = Astro.props as { current?: string };
+const locale = localeOf(Astro.currentLocale);
 ---
 
 <header class="site-nav" transition:persist="site-nav">
   <div class="site-nav__inner">
-    <a class="site-nav__name" href="/" data-nav-home>{site.person.name}</a>
-    <nav aria-label="Main">
+    <a class="site-nav__name" href={href(locale)} data-nav-home>{content(locale).person.name}</a>
+    <nav aria-label={t(locale).mainNav}>
       <ul class="site-nav__list">
         {
-          nav.map((n) => (
+          nav(locale).map((n) => (
             <li>
               <a href={n.href} data-nav={n.key} aria-current={current === n.key ? 'page' : undefined}>
                 {n.label}

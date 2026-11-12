@@ -9,6 +9,8 @@ import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-
 import SiteNav from '../components/SiteNav.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { site, posterUrl, filmBySlug } from '../lib/content';
+import { locales, localeOf, href, stripLocale, t, content } from '../i18n';
+import { detectSource } from '../i18n/detect';
 
 export interface Props {
   title: string;
@@ -19,19 +21,27 @@ export interface Props {
   ogFilm?: string;
   jsonLd?: object;
   footer?: boolean;
+  /** 404 only: no language redirect and no hreflang (one page serves every URL). */
+  notFound?: boolean;
   /** Home only: plays the one-time intro on a full page load. */
   intro?: boolean;
 }
-const { title, description, current, ogFilm, jsonLd, footer = true, intro = false } = Astro.props;
+const { title, description, current, ogFilm, jsonLd, footer = true, intro = false, notFound = false } = Astro.props;
+const locale = localeOf(Astro.currentLocale);
+const ui = t(locale);
+const bare = stripLocale(Astro.url.pathname);
+const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+const alternates = locales.map((l) => ({ l, url: abs(href(l, bare)) }));
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const og = posterUrl(filmBySlug(ogFilm ?? site.home.featuredFilmSlug));
-const introScript = `(function(){var w=window;if(location.pathname==='/'&&!w.__introSeen&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.setAttribute('data-intro','');}w.__introSeen=true;})();`;
+const introScript = `(function(){var w=window;if(/^\\/(?:es|cs)?\\/?$/.test(location.pathname)&&!w.__introSeen&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.setAttribute('data-intro','');}w.__introSeen=true;})();`;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={ui.htmlLang}>
   <head>
     <meta charset="utf-8" />
+    {!notFound && <script is:inline set:html={detectSource} />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -42,8 +52,15 @@ const introScript = `(function(){var w=window;if(location.pathname==='/'&&!w.__i
     <link rel="preconnect" href="https://i.ytimg.com" />
     <link rel="preload" as="font" type="font/woff2" href={literataLatin} crossorigin />
     <link rel="preload" as="font" type="font/woff2" href={archivoLatin} crossorigin />
+    {
+      !notFound &&
+        alternates.map((a) => <link rel="alternate" hreflang={a.l} href={a.url} />)
+    }
+    {!notFound && <link rel="alternate" hreflang="x-default" href={abs(bare)} />}
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={site.person.name} />
+    <meta property="og:locale" content={ui.ogLocale} />
+    {locales.filter((l) => l !== locale).map((l) => <meta property="og:locale:alternate" content={t(l).ogLocale} />)}
+    <meta property="og:site_name" content={content(locale).person.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={og} />
@@ -57,7 +74,7 @@ const introScript = `(function(){var w=window;if(location.pathname==='/'&&!w.__i
     <ClientRouter />
   </head>
   <body>
-    <a class="skip" href="#main">Skip to content</a>
+    <a class="skip" href="#main">{ui.skip}</a>
     <SiteNav current={current} />
     <slot />
     {footer && <SiteFooter />}

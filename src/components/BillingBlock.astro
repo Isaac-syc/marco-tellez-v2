@@ -1,19 +1,26 @@
 ---
 import type { Film } from '../lib/content';
-import { site } from '../lib/content';
+import { content, localeOf } from '../i18n';
+const labelsOf = {
+  en: ['Format', 'Aspect ratio', 'Color', 'Language'],
+  es: ['Formato', 'Relación de aspecto', 'Color', 'Idioma'],
+  cs: ['Formát', 'Poměr stran', 'Barva', 'Jazyk'],
+};
 const { film } = Astro.props as { film: Film };
+const locale = localeOf(Astro.currentLocale);
+const labels = labelsOf[locale];
 const data = [
-  ['Format', film.format],
-  ['Aspect ratio', film.aspectRatioLabel],
-  ['Color', film.color],
-  ['Language', film.language],
+  [labels[0], film.format],
+  [labels[1], film.aspectRatioLabel],
+  [labels[2], film.color],
+  [labels[3], film.language],
 ];
 ---
 
 <dl class="billing">
   <div class="billing__credit">
     <dt>{film.credit}</dt>
-    <dd>{site.person.name}</dd>
+    <dd>{content(locale).person.name}</dd>
   </div>
   <div class="billing__tech">
     {

@@ -24,7 +24,7 @@ export function initCopyEmail(): void {
         document.execCommand('copy');
         ta.remove();
       }
-      button.textContent = 'Copied';
+      button.textContent = wrap.dataset.copied ?? 'Copied';
       window.clearTimeout(timer);
       timer = window.setTimeout(() => (button.textContent = label), 2000);
     });

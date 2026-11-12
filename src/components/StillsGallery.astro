@@ -7,6 +7,8 @@
 import { Picture } from 'astro:assets';
 import { lightboxSources, type Still } from '../lib/content';
 import { partitionRows } from '../lib/rows';
+import { href, localeOf } from '../i18n';
+const locale = localeOf(Astro.currentLocale);
 
 const { items, strip = false } = Astro.props as { items: Still[]; strip?: boolean };
 // The home strip is a single row by definition.
@@ -60,7 +62,7 @@ const withSrc = await Promise.all(
                   {picture}
                 </a>
               ) : (
-                <a class="sg-link" href="/stills/">
+                <a class="sg-link" href={href(locale, '/stills/')}>
                   {picture}
                 </a>
               )}

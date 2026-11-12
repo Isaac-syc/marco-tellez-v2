@@ -1,17 +1,22 @@
 ---
 import { Picture } from 'astro:assets';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { site, stillBySlug, personJsonLd } from '../lib/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { stillBySlug, personJsonLd } from '../../lib/content';
+import { content, langPaths, localeOf } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const locale = localeOf(Astro.currentLocale);
+const site = content(locale);
 
 const a = site.about;
-const photo = stillBySlug('days-of-heaven');
+const photo = stillBySlug('days-of-heaven', locale);
 ---
 
 <BaseLayout
   title={`${a.heading} — ${site.person.name}`}
   description={a.paragraphs[0]}
   current="about"
-  jsonLd={personJsonLd(Astro.site?.href)}
+  jsonLd={personJsonLd(locale, Astro.site?.href)}
 >
   <main id="main" tabindex="-1">
     <div class="wrap page-head page-head--about">

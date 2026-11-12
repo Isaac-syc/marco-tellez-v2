@@ -1,6 +1,12 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { site, mailHref, telHref } from '../lib/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { mailHref, telHref } from '../../lib/content';
+import { content, langPaths, localeOf, t } from '../../i18n';
+
+export const getStaticPaths = langPaths;
+const locale = localeOf(Astro.currentLocale);
+const site = content(locale);
+const ui = t(locale);
 
 const c = site.contact;
 // Display form of a URL: host + path, no protocol.
@@ -20,11 +26,11 @@ const shown = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/
     <div class="wrap">
       <dl class="rows">
         <div class="rows__row">
-          <dt>Email</dt>
+          <dt>{ui.email}</dt>
           <dd class="rows__email">
             <a href={mailHref}>{c.email}</a>
-            <span class="copy" data-copy={c.email} aria-live="polite">
-              <button class="pill" type="button" data-copy-btn>Copy email</button>
+            <span class="copy" data-copy={c.email} data-copied={ui.copied} aria-live="polite">
+              <button class="pill" type="button" data-copy-btn>{ui.copyEmail}</button>
             </span>
           </dd>
         </div>
@@ -37,11 +43,11 @@ const shown = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/
           <dd><a href={c.linkedin.url} target="_blank" rel="noopener">{shown(c.linkedin.url)}</a></dd>
         </div>
         <div class="rows__row">
-          <dt>Mobile</dt>
+          <dt>{ui.mobile}</dt>
           <dd><a href={telHref}>{c.mobile.label}</a></dd>
         </div>
         <div class="rows__row">
-          <dt class="sr-only">Location</dt>
+          <dt class="sr-only">{ui.location}</dt>
           <dd class="rows__where">{c.locationLines.map((l) => <span>{l}</span>)}</dd>
         </div>
       </dl>

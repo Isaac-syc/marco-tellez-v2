@@ -1,0 +1,67 @@
+{
+  "person": { "role": "Cineasta / Director", "location": "Praga", "homeKickerRight": "Praga — 2026" },
+  "home": { "featuredLabel": "Obra destacada / Saccharine" },
+  "filmWords": {
+    "type": { "Fiction Short": "Cortometraje de ficción", "Documentary Short": "Cortometraje documental" },
+    "language": { "Czech": "Checo", "English": "Inglés", "Spanish": "Español" },
+    "format": { "16 mm": "16 mm", "Digital": "Digital" },
+    "color": { "Color": "Color", "Color / B&W": "Color / B/N", "B&W": "B/N" },
+    "credit": {
+      "Director & Writer": "Director y guionista",
+      "Director, Writer, Cinematographer, Sound Designer & Editor": "Director, guionista, director de fotografía, diseñador de sonido y editor"
+    }
+  },
+  "synopsis": {
+    "saccharine": "Convencidos de que la música puede mantenerlos unidos, Monika, Ludmilla y Honza viven su último ensayo antes del próximo concierto. Sin embargo, las discrepancias sobre el oficio y el mundo del espectáculo dejan al descubierto las grietas en su dinámica de hermanos.",
+    "kate-and-sam": "Lo que empieza como un picnic a orillas del Moldava termina bajo un puente, donde Sam consigue exactamente lo que había ido a buscar. A Kate le queda el silencio que viene después.",
+    "el-testamento-belmonte": "En los últimos días de una guerra civil, Liborio espera que el mundo se comporte como lo hace en los libros que lee. No lo hace. Solo un toro, lo único en su vida con el peso de una historia, parece prometerle un final.",
+    "bi-presence": "Una experiencia se repite en los sueños de Han. Al presenciar una recreación cinematográfica de ella, descubre cómo una imagen puede olvidarse sin llegar a perderse.",
+    "nocturno-de-chopin": "Inspirada en un poema de Alejandra Pizarnik, Shirley recorre un bar de tango en busca del amante que la engañó. La música sigue sonando y la noche no la deja ir.",
+    "a-skull-for-kira": "Para impresionar a Kira, otra perra, Max, un pug, se propone regalarle el cráneo de un animal muerto. Pero el cráneo se desvanece y, a medida que el día se agota, Max se encuentra buscando algo que el tiempo no puede llevarse."
+  },
+  "stills": {
+    "sections": { "analogue": "Analógico", "digital": "Digital" },
+    "alt": {
+      "days-of-heaven": "Un campo dorado salpicado de pacas de heno, visto a través del parabrisas de un coche; el espejo retrovisor refleja una casa.",
+      "scarecrow": "Silueta en blanco y negro de un espantapájaros con los brazos extendidos contra un cielo nublado.",
+      "bicis": "Dos bicicletas apoyadas en un pino a la orilla de un lago turquesa, con bañistas al fondo.",
+      "ilford": "Vista en blanco y negro hacia arriba, entre las ramas y la copa de un gran árbol.",
+      "wave-2": "Abstracto en blanco y negro: una franja vertical de luz brillante entre superficies oscuras y texturizadas.",
+      "avant-garde": "Vista en blanco y negro de una calle angosta hacia arriba: un balcón de hierro en una fachada de yeso, cables y una farola.",
+      "bici": "Toma en contrapicado, en blanco y negro, de una estatua de bronce de un ciclista inclinado sobre el manillar.",
+      "gato": "Fotografía en blanco y negro de un gato sentado en medio de un callejón angosto de piedra.",
+      "a-glass": "La silueta de un remolcador sobre aguas calmas al atardecer, con colinas y nubes encendidas al fondo.",
+      "venus": "Estatua en blanco y negro de una figura femenina desnuda sobre un pedestal, frente a un edificio de ladrillo con hastial.",
+      "antilope-01": "Mirada desde el interior de un cañón de arenisca roja hacia el cielo y las nubes.",
+      "happy-together": "Un faro rojo y blanco sobre un islote rocoso, con montañas nevadas al otro lado del agua.",
+      "plein-soleil": "Una pequeña barca solitaria en aguas abiertas, vista desde arriba a través de hierbas silvestres.",
+      "building": "Vista en contrapicado, en blanco y negro, de una farola y una torre de cristal con el sol destellando en lo alto.",
+      "niente-qua": "Escena de parque en blanco y negro, con árboles en primer plano y una torre de andamios a lo lejos.",
+      "olimpico": "Estatua de bronce de un discóbolo, en blanco y negro, frente a un edificio de ladrillo.",
+      "untitled-03": "Una mujer sentada entre las bancas de una basílica inundada de luz naranja de vitrales.",
+      "simonetta": "Una estatua de piedra cubierta de musgo, de una mujer que sostiene una corona, con follaje oscuro detrás.",
+      "moto": "Dos personas en una motoneta, entrevistas entre troncos oscuros, con agua turquesa detrás.",
+      "pachinko-ist-tot": "Una sola paca de heno redonda en un prado verde, con colinas boscosas al fondo.",
+      "untitled-02": "Dos personas con abrigos de invierno en la cubierta de un barco blanco, vistas desde abajo contra un cielo azul.",
+      "untitled-01": "El tablero y el volante de un automóvil antiguo, vistos a través de la ventanilla lateral.",
+      "rash": "Primer plano en blanco y negro de etiquetas de un mercado de especias con las palabras Ras el Hanout y Za’atar.",
+      "untitled-04": "Vista en blanco y negro de una casa flotante amarrada en un canal bordeado de casas altas y estrechas.",
+      "in-two-seconds": "Vapor que flota sobre una poza termal como un espejo, con una colina boscosa reflejada en el agua.",
+      "neroli-portofino": "Muros ocre y una escalera que enmarcan un arco abierto hacia barcos amarrados en un puerto."
+    }
+  },
+  "about": {
+    "heading": "Sobre Marco",
+    "paragraphs": [
+      "Marco Tellez-Alcocer es un director y editor de cine mexicano radicado en Praga, que trabaja entre la ficción y el documental, y cuyas películas siguen la manera en que las personas cargan con la memoria y buscan un propósito.",
+      "El impulso de cada una de sus películas es una imagen, un instante único que llega mucho antes que la historia. A partir de ahí, sus películas se construyen como una acumulación de imágenes en las que se cruzan el pasado, la memoria y la búsqueda de un propósito.",
+      "Está concluyendo una maestría (MFA) en Dirección en la Facultad de Cine y Televisión de la Academia de Artes Escénicas de Praga (FAMU), donde desarrolla un documental corto construido a partir de material de archivo familiar, y <em>Friedmann Creek</em>, un cortometraje de ficción sobre doppelgängers y sobre la manera en que los demás sienten la presencia de una persona."
+    ],
+    "experience": { "heading": "Experiencia seleccionada", "lines": ["Cineasta independiente", "Trabajo narrativo y comercial"] },
+    "education": {
+      "heading": "Formación",
+      "lines": ["Licenciatura en Producción Cinematográfica y Audiovisual – Universidad Popular Autónoma del Estado de Puebla (UPAEP)"]
+    }
+  },
+  "contact": { "heading": "¡Hablemos!", "locationLines": ["Praga, República Checa", "Disponible a nivel internacional"] }
+}

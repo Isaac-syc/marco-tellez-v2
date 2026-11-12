@@ -7,14 +7,18 @@ import type { ImageMetadata } from 'astro';
 import { getImage } from 'astro:assets';
 import site from '../data/site.json';
 import manifest from '../data/stills.json';
+import { content, href, t, type Locale } from '../i18n';
 
 export { site };
 
-export type Film = (typeof site.films)[number];
-export const films: Film[] = site.films;
+export type { Film } from '../i18n';
+import type { Film } from '../i18n';
 
-export const filmBySlug = (slug: string): Film => {
-  const f = films.find((x) => x.slug === slug);
+/** Films in `locale` (titles, years, runtimes… are never translated). */
+export const filmsOf = (locale: Locale): Film[] => content(locale).films;
+
+export const filmBySlug = (slug: string, locale: Locale = 'en'): Film => {
+  const f = filmsOf(locale).find((x) => x.slug === slug);
   if (!f) throw new Error(`Unknown film ${slug}`);
   return f;
 };
@@ -60,14 +64,15 @@ const modules = import.meta.glob<{ default: ImageMetadata }>('/src/assets/stills
 });
 
 const bySlug = new Map(manifest.map((m) => [m.slug, m]));
-const labels = Object.fromEntries(site.stills.sections.map((s) => [s.key, s.label]));
-const alts = site.stills.alt as Record<string, string>;
 
-function buildStills(): Still[] {
+function buildStills(locale: Locale): Still[] {
+  const c = content(locale);
+  const labels = Object.fromEntries(c.stills.sections.map((s) => [s.key, s.label]));
+  const alts = c.stills.alt as Record<string, string>;
   const out: Still[] = [];
   let n = 0;
-  for (const section of site.stills.sections) {
-    const order = (site.stills.order as Record<string, string[]>)[section.key];
+  for (const section of c.stills.sections) {
+    const order = (c.stills.order as Record<string, string[]>)[section.key];
     for (const slug of order) {
       const m = bySlug.get(slug);
       if (!m) throw new Error(`Still ${slug} not in manifest`);
@@ -91,9 +96,15 @@ function buildStills(): Still[] {
   return out;
 }
 
-export const stills: Still[] = buildStills();
-export const stillBySlug = (slug: string) => stills.find((s) => s.slug === slug)!;
-export const stillsOf = (cat: Still['category']) => stills.filter((s) => s.category === cat);
+const stillsCache = new Map<Locale, Still[]>();
+export const stillsFor = (locale: Locale): Still[] => {
+  let v = stillsCache.get(locale);
+  if (!v) stillsCache.set(locale, (v = buildStills(locale)));
+  return v;
+};
+export const stillBySlug = (slug: string, locale: Locale = 'en') => stillsFor(locale).find((s) => s.slug === slug)!;
+export const stillsOf = (cat: Still['category'], locale: Locale = 'en') =>
+  stillsFor(locale).filter((s) => s.category === cat);
 
 export interface LightboxSources {
   href: string;
@@ -120,22 +131,27 @@ export async function lightboxSources(s: Still): Promise<LightboxSources> {
   return { href: big.src, avif, webp };
 }
 
-export const nav = [
-  { href: '/films/', label: 'Films', key: 'films' },
-  { href: '/stills/', label: 'Stills', key: 'stills' },
-  { href: '/about/', label: 'About', key: 'about' },
-  { href: '/contact/', label: 'Contact', key: 'contact' },
-] as const;
+export const nav = (locale: Locale) =>
+  [
+    { href: href(locale, '/films/'), label: t(locale).nav.films, key: 'films' },
+    { href: href(locale, '/stills/'), label: t(locale).nav.stills, key: 'stills' },
+    { href: href(locale, '/about/'), label: t(locale).nav.about, key: 'about' },
+    { href: href(locale, '/contact/'), label: t(locale).nav.contact, key: 'contact' },
+  ] as const;
 
 export const telHref = `tel:${site.contact.mobile.tel}`;
 export const mailHref = `mailto:${site.contact.email}`;
 
-export const personJsonLd = (url?: string) => ({
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: site.person.name,
-  jobTitle: site.person.role,
-  ...(url ? { url } : {}),
-  address: { '@type': 'PostalAddress', addressLocality: site.person.location },
-  sameAs: [site.contact.instagram.url, site.contact.linkedin.url],
-});
+export const personJsonLd = (locale: Locale, url?: string) => {
+  const c = content(locale);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: c.person.name,
+    jobTitle: c.person.role,
+    inLanguage: locale,
+    ...(url ? { url } : {}),
+    address: { '@type': 'PostalAddress', addressLocality: c.person.location },
+    sameAs: [c.contact.instagram.url, c.contact.linkedin.url],
+  };
+};
